@@ -49,12 +49,12 @@ export default function Layout() {
               style={{ height: "40px", width: "auto" }} 
             />
           </Link>
-          <Link className="navbar-brand" to="/">About</Link>
+          <Link className="navbar-brand" to="/about">About</Link>
 
           {user && <Link className="navbar-brand" to="/create-post">Add post</Link>}
 
-          <Link className="navbar-brand" to="/">Services</Link>
-          <Link className="navbar-brand" to="/">Contact</Link>
+          <Link className="navbar-brand" to="/service">Services</Link>
+          <Link className="navbar-brand" to="/contact">Contact</Link>
 
           <button
             className="navbar-toggler"
@@ -100,6 +100,12 @@ export default function Layout() {
                       <span className="dropdown-item-text">{user.email}</span>
                     </li>
                     <li><hr className="dropdown-divider" /></li>
+                    <li>
+                      <Link className="dropdown-item" to="/profile/change-password">Change Password</Link>
+                    </li>
+                    <li>
+                      <Link className="dropdown-item" to="/profile/update">Update Profile</Link>
+                    </li>
                     <li>
                       <button className="dropdown-item" onClick={handleLogout}>Logout</button>
                     </li>

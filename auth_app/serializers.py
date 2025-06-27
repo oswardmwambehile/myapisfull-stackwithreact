@@ -4,6 +4,12 @@ from django.contrib.auth import authenticate
 from rest_framework import serializers
 from .models import Post
 
+from rest_framework import serializers
+from .models import CustomUser
+from django.contrib.auth.password_validation import validate_password
+
+from .models import Post
+
 class PostSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField(read_only=True)
     image = serializers.ImageField(required=False)  # Add this
@@ -12,6 +18,22 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = ['id', 'author', 'title', 'slug', 'content', 'category', 'image', 'created_at', 'updated_at']
         read_only_fields = ['id', 'author', 'created_at', 'updated_at']
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'username', 'email', 'first_name', 'last_name']
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True, validators=[validate_password])
+
+class UpdateProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'first_name', 'last_name', 'email']
+        extra_kwargs = {
+            'email': {'required': True},
+        }
 
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:

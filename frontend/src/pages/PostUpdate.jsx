@@ -6,8 +6,10 @@ const PostUpdate = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  // Add slug to formData state (required by serializer)
   const [formData, setFormData] = useState({
     title: '',
+    slug: '',
     content: '',
     category: '',
     image: null,
@@ -21,8 +23,8 @@ const PostUpdate = () => {
     axios
       .get(`http://127.0.0.1:8000/api/posts/${id}/`)
       .then((res) => {
-        const { title, content, category, image } = res.data;
-        setFormData({ title, content, category, image: null });
+        const { title, slug, content, category, image } = res.data;
+        setFormData({ title, slug, content, category, image: null });
         setImageUrl(image);
       })
       .catch((err) => {
@@ -48,8 +50,12 @@ const PostUpdate = () => {
       return;
     }
 
+    // Log formData for debugging
+    console.log('Submitting:', formData);
+
     const data = new FormData();
     data.append('title', formData.title);
+    data.append('slug', formData.slug); // slug required by backend
     data.append('content', formData.content);
     data.append('category', formData.category);
     if (formData.image) {
@@ -68,8 +74,11 @@ const PostUpdate = () => {
         navigate(`/posts/${id}`);
       })
       .catch((err) => {
-        console.error('Update error:', err);
-        alert('Failed to update post. Check your data and permissions.');
+        console.error('Update error response:', err.response);
+        alert(
+          'Failed to update post:\n' +
+            JSON.stringify(err.response?.data || err.message, null, 2)
+        );
       });
   };
 
@@ -109,6 +118,25 @@ const PostUpdate = () => {
             required
             style={inputStyle}
           />
+
+          {/* Slug (hidden if you don't want user to edit it) */}
+          <input
+            type="hidden"
+            name="slug"
+            value={formData.slug}
+            onChange={handleChange}
+          />
+          {/* If you want to show it, replace with input field:
+          <label style={labelStyle}>Slug:</label>
+          <input
+            type="text"
+            name="slug"
+            value={formData.slug}
+            onChange={handleChange}
+            required
+            style={inputStyle}
+          />
+          */}
 
           {/* Category */}
           <label style={labelStyle}>Category:</label>
@@ -177,7 +205,7 @@ const PostUpdate = () => {
   );
 };
 
-// 💄 Styling for input fields, labels, and buttons
+// Styling constants
 const labelStyle = {
   fontWeight: 'bold',
   fontSize: '16px',
