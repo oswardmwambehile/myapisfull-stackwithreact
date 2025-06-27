@@ -12,6 +12,8 @@ import Login from './pages/Login';
 import CreatePostForm from './pages/CreatePost';
 import PostList from './pages/PostList';
 import PostDetail from "./pages/PostDetail";
+import PostUpdate from './pages/PostUpdate';
+
 
 function App() {
 
@@ -25,6 +27,8 @@ function App() {
     <Route path="register" element={<Register/>}/>
     <Route path="create-post" element={<CreatePostForm/>}/>
     <Route path="/posts/:id" element={<PostDetail />} />
+    <Route path="/posts/:id/edit" element={<PostUpdate />} />
+
 
     </Route>
    </Routes>
